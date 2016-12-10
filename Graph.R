@@ -134,8 +134,9 @@ yfit<-yfit*diff(h$mids[1:2])*length(x)
 lines(xfit,yfit,col="blue",lwd=2)
 box()
 
+
 #-------------------------------------------------------------------------------
-#                           Kernal density plot                                     #
+#                           Kernel density plot                                #
 #-------------------------------------------------------------------------------
 par(mfrow=c(2,1))
 d <- density(mtcars$mpg)
@@ -146,6 +147,58 @@ d <- density(mtcars$mpg)
 plot(d, main="Kernel Density of Miles Per Gallon")
 polygon(d,col="red",border="blue")
 rug(mtcars$mpg,col="brown")
+
+
+#comparative kernel density plots
+
+# sm.density.compare():- function in the sm package allows you to superimpose
+#                        the kernel density plots of two or more groups
+
+par(lwd=2)      #double width of ploted lines
+library(sm)
+attach(mtcars)
+cyl.f<- factor(cyl,levels=c(4,6,8),
+               labels=c("4 cylindere","6 cylinder","8 cylinder")
+               )
+sm.density.compare(mpg,cyl,xlab="Miles per gallon")  #plot density
+title(main="Mpg distributed by cylinders")    # add main title
+colfill<-c(2:(1+length(levels(cyl.f)))) #assigns a color
+legend(locator(1),levels(cyl.f),fill=colfill) #add legend via mouse click
+detach(mtcars)
+
+
+#-------------------------------------------------------------------------------
+#                           Box plot                                           #
+#-------------------------------------------------------------------------------
+
+#This plot describes the distribution of a continuous variable by plotting
+# its five-number summary: the minimum, lower quartile (25th percentile), 
+#median (50th percentile), upper quartile (75th percentile), and maximum
+
+boxplot(mpg ~ cyl, data=mtcars,
+        main="Car Mileage Data",
+        xlab="Number of Cylinders",
+        ylab="Miles Per Gallon")
+
+mtcars$cyl.f<-factor(mtcars$cyl,
+                     levels=c(4,6,8),
+                     labels=c("4","6","8")
+                     )
+mtcars$am.f<- factor(mtcars$am,
+                     levels=c(0,1),
+                     labels=c("auto","standard")
+                     )
+boxplot(mpg~ am.f * cyl.f,
+        data=mtcars,
+        varwidth=TRUE,   #produces box plots with widths that are proportional to their sample sizes
+        col=c("gold","darkgreen"),
+        main= "MPG distribution by auto type ",
+        xlab="auto type"
+        )
+ 
+#-------------------------------------------------------------------------------
+#                           Dot plot                                           #
+#-------------------------------------------------------------------------------       
 
 
 
